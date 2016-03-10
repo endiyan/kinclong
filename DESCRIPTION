@@ -1,0 +1,10 @@
+Package: kinclong
+Title: Clean and Tidy Excel Sheets
+Version: 0.0.0.9000
+Authors@R: person("Endiyan", "Rakhmanda", email = "me@endiyan.com", role = c("aut", "cre"))
+Description: Clean and Tidy Excel Sheets
+Depends:
+    R (>= 3.2.2)
+License: CC-BY
+LazyData: true
+RoxygenNote: 5.0.1.9000
