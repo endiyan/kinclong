@@ -98,9 +98,7 @@ validasi = function()
         }
         
     }
-    
-    
-kosong = function(){}
-    
 }
+
+kosong = function(){}
 
