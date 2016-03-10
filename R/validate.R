@@ -99,5 +99,8 @@ validasi = function()
         
     }
     
+    
+kosong = function(){}
+    
 }
 
