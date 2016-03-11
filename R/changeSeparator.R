@@ -29,6 +29,7 @@ removeSeparator_df = function(df,
                               colname)
 {
     #remove separator
+    df[,colname] = as.character(df[,colname])
     df[[colname]] = lapply(df[,colname], function(x) gsub("[^a-zA-Z0-9_][0-9]{0,2}$", "", x)) #something with lapply wrong here
     df[[colname]] = lapply(df[,colname], function(x) gsub("[,.]", "", x))
     df[[colname]] = as.numeric(df[,colname])

@@ -25,7 +25,6 @@ validasi = function()
         
         #load data as dataframe
         data = read.csv(sourcefile,
-                        stringsAsFactors=F,
                         sep=separator)
         
         df = as.data.frame(data)
@@ -44,6 +43,8 @@ validasi = function()
         print("2. hilangkan kolom")
         print("3. ubah type data")
         print("4. bersihkan nilai kosong")
+        print("5. trim whitespaces")
+        print("6. to lower case")
         print("9. lihat data")
         print("10. lihat rangkuman data")
         print("0. keluar")
@@ -69,17 +70,27 @@ validasi = function()
             df[,choice] = NULL
             
         }
-        else if(choice == "")
+        else if(choice == "3")
         {
-            #change typof
+            #change typeof
             print("Nama dan tipe data setiap kolom pada data ini :")
             print(lapply(df,typeof))
-            choice = readline("Masukan nama kolom yang ingin ubah tipenya : ")
-            print(typeof(df[,choice]))
-            newDataType = readline("Ubah menjadi text atau numerik : ")
+            colname = readline("Masukan nama kolom yang ingin ubah tipenya : ")
+            print(typeof(df[,colname]))
+            print("Ubah menjadi text atau numerik : ")
+            print("1. Text")
+            print("2. Numerik")
+            choice = readline("Masukan tipe baru: ")
+            if (choice == "1")
+            {
+                df[,colname] = as.factor(df[,colname])
+            }
+            else
+            {
+                df[,colname] = as.numeric(df[,colname])
+            }
+            print(summary(df[,colname]))
             
-            print(summary(df[,choice]))
-            df[,choice] = NULL
             
         }
         else if(choice == "4")
