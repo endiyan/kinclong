@@ -67,7 +67,8 @@ validasi = function()
             print(colnames(df))
             choice = readline("Masukan nama kolom yang ingin anda hapus : ")
             print(summary(df[,choice]))
-            df[,choice] = NULL
+            
+            df = dropColumn(df, choice)
             
         }
         else if(choice == "3")
@@ -80,17 +81,8 @@ validasi = function()
             print("Ubah menjadi text atau numerik : ")
             print("1. Text")
             print("2. Numerik")
-            choice = readline("Masukan tipe baru: ")
-            if (choice == "1")
-            {
-                df[,colname] = as.factor(df[,colname])
-            }
-            else
-            {
-                df[,colname] = as.numeric(df[,colname])
-            }
-            print(summary(df[,colname]))
-            
+            type = readline("Masukan tipe baru: ")
+            df = changeType(df, colname, type)
             
         }
         else if(choice == "4")
@@ -111,5 +103,45 @@ validasi = function()
     }
 }
 
-kosong = function(){}
+dropColumn = function(df,colname)
+{
+    df[,colname] = NULL
+    print(paste("Kolom ", colname, " dihapus")
+    return(df)
+}
 
+changeType = function(df, colname, type)
+{
+    if (type == "1")
+    {
+        df[,colname] = as.factor(df[,colname])
+        print(paste("Tipe data kolom ", colname, " diubah menjadi ", "text")
+    }
+    else
+    {
+        df[,colname] = as.numeric(df[,colname])
+        print(paste("Tipe data kolom ", colname, " diubah menjadi ", "numerik")
+    }
+    
+    return(df)
+}
+
+#load multiple csv
+loadMultipleFiles = function(file_names = dir(), columnNames)
+{
+    #library(dplyr)
+    #library(data.table)
+    dfs = lapply(file_names, fread)
+    dfs = lapply(dfs, setColumnNames, columnNames)
+    df = bind_rows(dfs)
+    
+    return(df)
+}
+
+#change colnames
+setColumnNames = function(df,columnnames)
+{
+    colnames(df) = columnnames
+    return(df)
+}
+    
