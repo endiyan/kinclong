@@ -21,15 +21,8 @@ validasi = function()
     if (choice == "1")
     {
         sourcefile = file.choose()
-        separator = readline("Masukan character separator:")
-        
-        #load data as dataframe
-        data = read.csv(sourcefile,
-                        sep=separator)
-        
-        df = as.data.frame(data)
-        
-        print(summary(data))
+        df = fread(sourcefile)
+        print(summary(df))
     }
     else
     {
