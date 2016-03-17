@@ -1,6 +1,6 @@
-#' script for validating data
+#' script for validating dframe
 #'
-#' This function allows you go through various steps to cleanse the data
+#' This function allows you go through various steps to cleanse the dframe
 #' @keywords validate, verified
 #' @export
 #' @examples
@@ -10,7 +10,7 @@
 validasi = function() 
 {
     #prolog
-    print("Selamat datang di script validasi data.")
+    print("Selamat datang di script validasi data")
     print("Silahkan pilih yang ingin anda lakukan :")
     print("1. pilih data untuk divalidasi")
     print("0. keluar")
@@ -20,9 +20,8 @@ validasi = function()
     
     if (choice == "1")
     {
-        sourcefile = file.choose()
-        df = fread(sourcefile)
-        print(summary(df))
+        dframe = fread(file.choose(), data.table = F)
+        print(summary(dframe))
     }
     else
     {
@@ -40,101 +39,169 @@ validasi = function()
         print("6. to lower case")
         print("9. lihat data")
         print("10. lihat rangkuman data")
-        print("0. keluar")
+        #print("10. hilangkan kolom kosong")
+        #print("10. hilangkan baris kosong")
+        #print("10. seragamkan penulisan kelurahan")
+        #print("10. seragamkan penulisan kecamatan")
+        #print("10. seragamkan penulisan provinsi")
+        #print("10. pisahkan kelurahan, kecamatan, dan wilayah kota dari kolom alamat")
+        #print("10. pisahkan RT, RW dari kolom alamat")
+        print("0. simpan data")
         choice = readline("Masukan kode angka yang tertera : ")
         
         
         #remove thousand separator
         if (choice == "1")
         {
-            print(colnames(df))
+            print(colnames(dframe))
             col = readline("Masukan nama kolom : ")
-            df = removeSeparator_df(df, col)
-            print(head(df[,col]))
+            dframe = removeSeparator_df(dframe, col)
+            print(head(dframe[,col]))
             
         }
         else if(choice == "2")
         {
             #drop column
-            print("Nama kolom yang ada pada data ini :")
-            print(colnames(df))
+            print("Nama kolom yang ada pada dframe ini :")
+            print(colnames(dframe))
             choice = readline("Masukan nama kolom yang ingin anda hapus : ")
-            print(summary(df[,choice]))
+            print(summary(dframe[,choice]))
             
-            df = dropColumn(df, choice)
+            dframe = dropColumn(dframe, choice)
             
         }
         else if(choice == "3")
         {
             #change typeof
-            print("Nama dan tipe data setiap kolom pada data ini :")
-            print(lapply(df,typeof))
+            print("Nama dan tipe dframe setiap kolom pada dframe ini :")
+            print(lapply(dframe,typeof))
             colname = readline("Masukan nama kolom yang ingin ubah tipenya : ")
-            print(typeof(df[,colname]))
-            print("Ubah menjadi text atau numerik : ")
+            print(typeof(dframe[,colname]))
+            print("Ubah menjadi tipe berikut : ")
             print("1. Text")
             print("2. Numerik")
+            print("3. Tanggal")
             type = readline("Masukan tipe baru: ")
-            df = changeType(df, colname, type)
-            
+            if (type == "3") 
+            {
+                print("Silahkan pilih format penulisan tanggal yang ada sebelumnya : ")
+                print("1. 29/02/2016")
+                print("2. 02/29/2016")
+                print("3. 2016/02/29")
+                print("4. 29-02-2016")
+                print("5. 02-29-2016")
+                print("6. 2016-02-29")
+                choice = readline("Silahkan pilih format penulisan tanggal yang ada sebelumnya : ")
+                if (choice == "1")
+                {
+                    dframe = setAsDate(date.format="%d/%m/%Y", dframe, colname)
+                }
+                else if (choice == "2")
+                {
+                    dframe = setAsDate(date.format="%m/%d/%Y", dframe, colname)
+                }
+                else if (choice == "3")
+                {
+                    dframe = setAsDate(date.format="%Y/%m/%d", dframe, colname)
+                }
+                else if (choice == "4")
+                {
+                    dframe = setAsDate(date.format="%d-%m-%Y", dframe, colname)
+                }
+                else if (choice == "5")
+                {
+                    dframe = setAsDate(date.format="%m-%d-%Y", dframe, colname)
+                }
+                else if (choice == "6")
+                {
+                    dframe = setAsDate(date.format="%Y-%m-%d", dframe, colname)
+                }
+            } 
+            else
+            {
+                dframe = changeType(dframe, colname, type)
+            }
         }
         else if(choice == "4")
         {
             #set null values
-            df[df == ""] = NA
-            df[df == "-"] = NA
+            dframe[dframe == ""] = NA
+            dframe[dframe == "-"] = NA
+            print("nilai kosong berhasil dibersihkan")
         }
         else if(choice == "9")
         {
-            View(df)
+            View(dframe)
+        }
+        else if(choice == "10")
+        {
+            lapply(dframe, summary)
         }
         else if(choice == "0")
         {
-            return(df)
+            write.csv(dframe,
+                      file=readline("Masukan nama file (berikan ekstensi .csv diakhir nama) :"),
+                      row.names=F,
+                      sep=',', 
+                      col.names=TRUE)
+            print(paste("data tersimpan di ", getwd()))
+            
+            return(dframe)
         }
         
     }
 }
 
-dropColumn = function(df,colname)
+dropColumn = function(dframe,colname)
 {
-    df[,colname] = NULL
-    print(paste("Kolom ", colname, " dihapus")
-    return(df)
+    dframe[,colname] = NULL
+    print(paste("Kolom ", colname, " dihapus"))
+    return(dframe)
 }
 
-changeType = function(df, colname, type)
+changeType = function(dframe, colname, type)
 {
     if (type == "1")
     {
-        df[,colname] = as.factor(df[,colname])
-        print(paste("Tipe data kolom ", colname, " diubah menjadi ", "text")
+        dframe[,colname] = as.factor(dframe[,colname])
+        print(paste("Tipe dframe kolom ", colname, " diubah menjadi ", "text"))
     }
     else
     {
-        df[,colname] = as.numeric(df[,colname])
-        print(paste("Tipe data kolom ", colname, " diubah menjadi ", "numerik")
+        dframe[,colname] = as.numeric(dframe[,colname])
+        print(paste("Tipe dframe kolom ", colname, " diubah menjadi ", "numerik"))
     }
     
-    return(df)
+    return(dframe)
 }
 
 #load multiple csv
 loadMultipleFiles = function(file_names = dir(), columnNames)
 {
     #library(dplyr)
-    #library(data.table)
+    #library(dframe.table)
     dfs = lapply(file_names, fread)
     dfs = lapply(dfs, setColumnNames, columnNames)
-    df = bind_rows(dfs)
+    dframe = bind_rows(dfs)
     
-    return(df)
+    return(dframe)
 }
 
 #change colnames
-setColumnNames = function(df,columnnames)
+setColumnNames = function(dframe,columnnames)
 {
-    colnames(df) = columnnames
-    return(df)
+    colnames(dframe) = columnnames
+    return(dframe)
+}
+
+#set column values as date
+setAsDate = function(date.format="%d/%m/%Y", dframe, colName)
+{
+    #lapply returns a list of Dates, but we need to unlist it and set it to dframe[,colName]. but unlist kills the date format
+    #(based on docs and http://stackoverflow.com/questions/15659783/why-does-unlist-kill-dates-in-r). Also see this 
+    #http://stackoverflow.com/questions/35591022/how-to-unlist-result-of-lapply-involving-functionx-as-dateas-posixctx-origi?lq=1
+    res = lapply(dframe[,colName], as.Date, date.format)
+    dframe[,colName] = do.call("c", res) 
+    return(dframe)
 }
     
