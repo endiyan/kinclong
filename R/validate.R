@@ -13,6 +13,7 @@ validasi = function()
     print("Selamat datang di script validasi data")
     print("Silahkan pilih yang ingin anda lakukan :")
     print("1. pilih data untuk divalidasi")
+    print("2. pilih data dari link")
     print("0. keluar")
     
     #choose file to work with
@@ -22,6 +23,10 @@ validasi = function()
     {
         dframe = fread(file.choose(), data.table = F)
         print(summary(dframe))
+    }
+    else if(choice == "2")
+    {
+        return()
     }
     else
     {
@@ -188,9 +193,9 @@ loadMultipleFiles = function(file_names = dir(), columnNames)
 }
 
 #change colnames
-setColumnNames = function(dframe,columnnames)
+setColumnNames = function(dframe,colnames)
 {
-    colnames(dframe) = columnnames
+    colnames(dframe) = colnames
     return(dframe)
 }
 
@@ -204,4 +209,6 @@ setAsDate = function(date.format="%d/%m/%Y", dframe, colName)
     dframe[,colName] = do.call("c", res) 
     return(dframe)
 }
+
+
     
