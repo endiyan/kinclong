@@ -2,6 +2,15 @@
 
 It's an R-Package primarily built for data cleansing routines used by the Open Data team at Jakarta Provincial Government. It's a user input based through the terminal as the user interface. It starts by calling the function `validasi()`
 
+To install and use:
+````
+install.packages("devtools")
+library("devtools")
+devtools::install_github("endiyan/kinclong")
+library("kinclong")
+`````
+Call the function `validasi()` to start the terminal based UI or you can directly use the functions below
+
 ## Functions
 all functions return a data frame
 
